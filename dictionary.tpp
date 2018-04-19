@@ -1,8 +1,8 @@
-template <typename K, typename I>
-struct Dictionary<K, I>::Node
+template <typename K, typename V>
+struct Dictionary<K, V>::Node
 {
     K key;
-    I info;
+    V info;
 
     int bf;
     int height;
@@ -10,23 +10,23 @@ struct Dictionary<K, I>::Node
     Node *right;
 };
 
-template <typename K, typename I>
-class Dictionary<K, I>::DictionaryException final : std::invalid_argument
+template <typename K, typename V>
+class Dictionary<K, V>::DictionaryException final : std::invalid_argument
 {
     public :
         using std::invalid_argument::invalid_argument;
 };
 
-template <typename K, typename I>
-void Dictionary<K, I>::insert(const key_type& new_key, const value_type& new_value){
+template <typename K, typename V>
+void Dictionary<K, V>::insert(const key_type& new_key, const value_type& new_value){
     if(!contain(new_key, root))
         root = insert(new_key, new_value, root);
 }
 
 //***************** auxiliary functions *************************************
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::insert(const key_type& key, const value_type& val, Node *start){
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::insert(const key_type& key, const value_type& val, Node *start){
     if(!start)
         return new Node{key, val, 0, 0, nullptr, nullptr};
 
@@ -39,8 +39,8 @@ typename Dictionary<K, I>::Node* Dictionary<K, I>::insert(const key_type& key, c
     return balance(start);
 }
 
-template <typename K, typename I>
-void Dictionary<K, I>::update(Node *node) noexcept{
+template <typename K, typename V>
+void Dictionary<K, V>::update(Node *node) noexcept{
     int left_height = node->left ? node->left->height : -1;
     int right_height = node->right ? node->right->height : -1;
 
@@ -48,8 +48,8 @@ void Dictionary<K, I>::update(Node *node) noexcept{
     node->bf = right_height - left_height;
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::balance(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::balance(Node *node) noexcept{
     if(node->bf == -2){
         //left left
         if(node->left->bf <= 0)
@@ -69,30 +69,30 @@ typename Dictionary<K, I>::Node* Dictionary<K, I>::balance(Node *node) noexcept{
     return node;
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::llrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::llrotation(Node *node) noexcept{
     return rrotation(node);
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::lrrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::lrrotation(Node *node) noexcept{
     node->left = lrotation(node->left);
     return rrotation(node);
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::rrrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::rrrotation(Node *node) noexcept{
     return lrotation(node);
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::rlrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::rlrotation(Node *node) noexcept{
     node->right = rrotation(node->right);
     return lrotation(node);
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::lrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::lrotation(Node *node) noexcept{
     Node *new_parent = node->right;
     node->right = new_parent->left;
     new_parent->left = node;
@@ -101,8 +101,8 @@ typename Dictionary<K, I>::Node* Dictionary<K, I>::lrotation(Node *node) noexcep
     return new_parent;
 }
 
-template <typename K, typename I>
-typename Dictionary<K, I>::Node* Dictionary<K, I>::rrotation(Node *node) noexcept{
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::rrotation(Node *node) noexcept{
     Node *new_parent = node->left;
     node->left = new_parent->right;
     new_parent->right = node;
@@ -111,8 +111,8 @@ typename Dictionary<K, I>::Node* Dictionary<K, I>::rrotation(Node *node) noexcep
     return new_parent;
 }
 
-template <typename K, typename I>
-void Dictionary<K, I>::graph(std::ostream& os, int width, Node *start) const{
+template <typename K, typename V>
+void Dictionary<K, V>::graph(std::ostream& os, int width, Node *start) const{
     if(start) {
         if(start->right)
             graph(os, width + 8, start->right);
@@ -129,8 +129,8 @@ void Dictionary<K, I>::graph(std::ostream& os, int width, Node *start) const{
     }
 }
 
-template <typename K, typename I>
-void Dictionary<K, I>::inorder(std::ostream& os, Node *start) const{
+template <typename K, typename V>
+void Dictionary<K, V>::inorder(std::ostream& os, Node *start) const{
     if(start){
         inorder(os, start->left);
         os << start->info << ' ';
@@ -138,8 +138,8 @@ void Dictionary<K, I>::inorder(std::ostream& os, Node *start) const{
     }
 }
 
-template <typename K, typename I>
-void Dictionary<K, I>::preorder(std::ostream& os, Node *start) const{
+template <typename K, typename V>
+void Dictionary<K, V>::preorder(std::ostream& os, Node *start) const{
     if(start){
         os << start->info << ' ';
         preorder(os, start->left);
@@ -147,8 +147,8 @@ void Dictionary<K, I>::preorder(std::ostream& os, Node *start) const{
     }
 }
 
-template <typename K, typename I>
-void Dictionary<K, I>::postorder(std::ostream& os, Node *start) const{
+template <typename K, typename V>
+void Dictionary<K, V>::postorder(std::ostream& os, Node *start) const{
     if(start){
         postorder(os, start->left);
         postorder(os, start->right);
@@ -156,8 +156,8 @@ void Dictionary<K, I>::postorder(std::ostream& os, Node *start) const{
     }
 }
 
-template <typename K, typename I>
-bool Dictionary<K, I>::contain(const key_type& key, Node *start) const noexcept{
+template <typename K, typename V>
+bool Dictionary<K, V>::contain(const key_type& key, Node *start) const noexcept{
     if(!start)
         return false;
 

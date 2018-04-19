@@ -2,8 +2,9 @@
 
 #include <stdexcept>
 #include <iomanip>
+#include <initializer_list>
 
-template <typename K, typename I>
+template <typename K, typename V>
 class Dictionary
 {
     //private member types
@@ -13,7 +14,7 @@ class Dictionary
 
 public:
     using key_type = K;
-    using value_type = I;
+    using value_type = V;
 
     class DictionaryException;
 
@@ -26,6 +27,11 @@ public:
     Dictionary(Dictionary&& source) noexcept : root(std::move(root)){
         source.root = nullptr;
     }
+    Dictionary(std::initializer_list<std::pair<key_type, value_type>> ls) noexcept : root(nullptr){
+        for(auto curr_pair : ls)
+            insert(curr_pair.first, curr_pair.second);
+    }
+
 
     //operator
     Dictionary& operator=(const Dictionary& rhs){
