@@ -116,11 +116,12 @@ void Dictionary<K, I>::graph(std::ostream& os, int width, Node *start) const{
     if(start) {
         if(start->right)
             graph(os, width + 8, start->right);
-        if(width)
+        if(width > 0)
             os << std::setw(width) << ' ';
         if(start->right)
             os << '\n' << std::setw(width) << ' ';
-        os<< start->key << "\n";
+
+        os << '[' << start->key << ',' << start->info << "]\n";
         if(start->left) {
             os << std::setw(width) << ' ' << "\n";
             graph(os, width + 8, start->left);

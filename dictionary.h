@@ -37,6 +37,10 @@ public:
 
     //modifiers
     void insert(const key_type& new_key, const value_type& new_value);
+    void clear() noexcept{
+        clear(root);
+        root = nullptr;
+    }
 
     //operations
     void graph(std::ostream& os) const{
@@ -55,9 +59,20 @@ public:
         return contain(key, root);
     }
 
+    ~Dictionary(){
+        clear(root);
+    }
+
 private:
     //modifiers
     Node* insert(const key_type& key, const value_type& val, Node *start);
+    void clear(Node *start){
+        if(!start)
+            return;
+        clear(start->left);
+        clear(start->right);
+        delete start;
+    }
 
     //updating nodes and tree functions
     void update(Node *node) noexcept;
