@@ -18,13 +18,25 @@ public:
     class DictionaryException;
 
     //constructors
-    Dictionary() : root(nullptr)
+    Dictionary() noexcept : root(nullptr)
     {}
     Dictionary(const Dictionary& source){
-        //perform coping *this = source
+        root = copy(source.root);
     }
-    Dictionary(Dictionary&& source) : root(std::move(root)){
+    Dictionary(Dictionary&& source) noexcept : root(std::move(root)){
         source.root = nullptr;
+    }
+
+    //operator
+    Dictionary& operator=(const Dictionary& rhs){
+        clear();
+        root = copy(rhs.root);
+        return *this;
+    }
+    Dictionary& operator=(Dictionary&& rhs){
+        clear();
+        root = std::move(rhs.root);
+        return *this;
     }
 
     //capacity
@@ -96,6 +108,15 @@ private:
 
     //operations
     bool contain(const key_type& key, Node *start) const noexcept;
+    Node* copy(Node *start){
+        Node *retv = nullptr;
+        if(start){
+            retv = new Node{start->key, start->info, start->bf, start->height, nullptr, nullptr};
+            retv->left = copy(start->left);
+            retv->right = copy(start->right);
+        }
+        return retv;
+    }
 };
 
 #include "dictionary.tpp"
