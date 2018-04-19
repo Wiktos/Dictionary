@@ -6,7 +6,7 @@ int main()
 {
 
     {//test constructor
-        Dictionary test;
+        Dictionary<int, int> test;
         if(!test.is_empty())
             std::cerr << "Log : default constructor error is_empty() == false\n";
 
@@ -16,7 +16,7 @@ int main()
     }
 
     {//test insert method
-        Dictionary test;
+        Dictionary<int, int> test;
         test.insert(1, 1);
 
         if(test.is_empty())
@@ -25,16 +25,20 @@ int main()
             std::cerr << "Log : insert method error height() != 1\n";
 
         test.insert(2, 2);
-        if(test.height() != 2)
+        if(test.height() != 1)
             std::cerr << "Log : insert method error height() != 1\n";
 
-        try{
-            test.insert(1, 1);
-            std::cerr << "Log : insert method DictionaryException should be thrown\n";
-        }
-        catch(Dictionary::DictionaryException& ex)
-        {}
+        test.print_inorder(std::cout);
+    }
 
+    {//test contain method
+        Dictionary<int, int> test;
+        test.insert(1, 1);
+
+        if(!test.contain(1))
+            std::cerr << "Log : constain method error contain(1) == false\n";
+        if(test.contain(2))
+            std::cerr << "Log : constain method error contain(2) == true\n";
     }
 
     return 0;
