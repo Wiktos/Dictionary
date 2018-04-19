@@ -39,8 +39,8 @@ public:
     void insert(const key_type& new_key, const value_type& new_value);
 
     //operations
-    void graph() const{
-        graph(0, root);
+    void graph(std::ostream& os) const{
+        graph(os, 0, root);
     }
     void print_inorder(std::ostream& os) const{
         inorder(os, root);
@@ -74,21 +74,7 @@ private:
     Node* rrotation(Node *node) noexcept;
 
     //printers
-    void graph(int width, Node *start) const{
-        if(start) {
-            if(start->right)
-                graph(width + 8, start->right);
-            if(width)
-                std::cout << std::setw(width) << ' ';
-            if(start->right)
-                std::cout << '\n' << std::setw(width) << ' ';
-            std::cout<< start->key << "\n";
-            if(start->left) {
-                std::cout << std::setw(width) << ' ' << "\n";
-                graph(width + 8, start->left);
-            }
-        }
-    }
+    void graph(std::ostream& os, int width, Node *start) const;
     void inorder(std::ostream& os, Node *start) const;
     void preorder(std::ostream& os, Node *start) const;
     void postorder(std::ostream& os, Node *start) const;

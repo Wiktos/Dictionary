@@ -112,6 +112,23 @@ typename Dictionary<K, I>::Node* Dictionary<K, I>::rrotation(Node *node) noexcep
 }
 
 template <typename K, typename I>
+void Dictionary<K, I>::graph(std::ostream& os, int width, Node *start) const{
+    if(start) {
+        if(start->right)
+            graph(os, width + 8, start->right);
+        if(width)
+            os << std::setw(width) << ' ';
+        if(start->right)
+            os << '\n' << std::setw(width) << ' ';
+        os<< start->key << "\n";
+        if(start->left) {
+            os << std::setw(width) << ' ' << "\n";
+            graph(os, width + 8, start->left);
+        }
+    }
+}
+
+template <typename K, typename I>
 void Dictionary<K, I>::inorder(std::ostream& os, Node *start) const{
     if(start){
         inorder(os, start->left);

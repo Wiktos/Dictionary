@@ -33,7 +33,7 @@ int main()
         for(int i = 0; i < 10; i++)
             test.insert(i, i);
 
-        test.graph();
+        test.graph(std::cout);
     }
 
     {//test contain method
