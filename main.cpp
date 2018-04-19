@@ -12,7 +12,6 @@ int main()
 
         if(test.height())
             std::cerr << "Log : default constructor error height() != 0\n";
-
     }
 
     {//test insert method
@@ -21,14 +20,20 @@ int main()
 
         if(test.is_empty())
             std::cerr << "Log : insert method error is_empty() == true\n";
-        if(test.height() != 1)
-            std::cerr << "Log : insert method error height() != 1\n";
+        if(test.height() != 0)
+            std::cerr << "Log : insert method error height() != 0\n";
 
         test.insert(2, 2);
         if(test.height() != 1)
             std::cerr << "Log : insert method error height() != 1\n";
+    }
 
-        test.print_inorder(std::cout);
+    {//test graph
+        Dictionary<int, int> test;
+        for(int i = 0; i < 10; i++)
+            test.insert(i, i);
+
+        test.graph();
     }
 
     {//test contain method

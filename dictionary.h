@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <iomanip>
 
 template <typename K, typename I>
 class Dictionary
@@ -11,8 +12,8 @@ class Dictionary
     Node *root;
 
 public:
-    using key_type = int;
-    using value_type = int;
+    using key_type = K;
+    using value_type = I;
 
     class DictionaryException;
 
@@ -38,69 +39,61 @@ public:
     void insert(const key_type& new_key, const value_type& new_value);
 
     //operations
-    void graph() const noexcept{
+    void graph() const{
+        graph(0, root);
     }
     void print_inorder(std::ostream& os) const{
         inorder(os, root);
     }
-    bool contain(const key_type& key) const noexcept{
+    void print_preorder(std::ostream& os) const{
+        preorder(os, root);
+    }
+    void print_postorder(std::ostream& os) const{
+        postorder(os, root);
+    }
+    bool contain(const key_type& key) const{
         return contain(key, root);
     }
 
 private:
+    //modifiers
     Node* insert(const key_type& key, const value_type& val, Node *start);
+
+    //updating nodes and tree functions
     void update(Node *node) noexcept;
-    Node* balance(Node *node){
-        if(node->bf == -2){
-            //left left
-            if(node->left->bf <= 0)
-                return llrotation(node);
-            else    //left right
-                return lrrotation(node);
-        }
-        else if(node->bf == 2){
-            //right right
-            if(node->right->bf >= 0)
-                return rrrotation(node);
-            else    //right left
-                return rlrotation(node);
-        }
+    Node* balance(Node *node) noexcept;
 
-        //balanced
-        return node;
-    }
-    Node* llrotation(Node *node){
-        return rrotation(node);
-    }
-    Node* lrrotation(Node *node){
-        node->left = lrotation(node->left);
-        return rrotation(node);
-    }
-    Node* rrrotation(Node *node){
-        return lrotation(node);
-    }
-    Node* rlrotation(Node *node){
-        node->right = rrotation(node->right);
-        return lrotation(node);
-    }
-    Node* lrotation(Node *node){
-        Node *new_parent = node->right;
-        node->right = new_parent->left;
-        new_parent->left = node;
-        update(node);
-        update(new_parent);
-        return new_parent;
-    }
-    Node* rrotation(Node *node){
-        Node *new_parent = node->left;
-        node->left = new_parent->right;
-        new_parent->right = node;
-        update(node);
-        update(new_parent);
-        return new_parent;
-    }
+    //rotations performed on tree
+    Node* llrotation(Node *node) noexcept;
+    Node* lrrotation(Node *node) noexcept;
+    Node* rrrotation(Node *node) noexcept;
+    Node* rlrotation(Node *node) noexcept;
 
+    //single rotations
+    Node* lrotation(Node *node) noexcept;
+    Node* rrotation(Node *node) noexcept;
+
+    //printers
+    void graph(int width, Node *start) const{
+        if(start) {
+            if(start->right)
+                graph(width + 8, start->right);
+            if(width)
+                std::cout << std::setw(width) << ' ';
+            if(start->right)
+                std::cout << '\n' << std::setw(width) << ' ';
+            std::cout<< start->key << "\n";
+            if(start->left) {
+                std::cout << std::setw(width) << ' ' << "\n";
+                graph(width + 8, start->left);
+            }
+        }
+    }
     void inorder(std::ostream& os, Node *start) const;
+    void preorder(std::ostream& os, Node *start) const;
+    void postorder(std::ostream& os, Node *start) const;
+
+    //operations
     bool contain(const key_type& key, Node *start) const noexcept;
 };
 
