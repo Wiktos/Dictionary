@@ -21,6 +21,14 @@ template <typename K, typename V>
 void Dictionary<K, V>::insert(const key_type& new_key, const value_type& new_value){
     if(!contain(new_key, root))
         root = insert(new_key, new_value, root);
+    else
+        throw DictionaryException("Dictionary insert : key already exists");
+}
+
+template <typename K, typename V>
+void Dictionary<K, V>::clear(){
+    clear(root);
+    root = nullptr;
 }
 
 //***************** auxiliary functions *************************************
@@ -37,6 +45,15 @@ typename Dictionary<K, V>::Node* Dictionary<K, V>::insert(const key_type& key, c
 
     update(start);
     return balance(start);
+}
+
+template <typename K, typename V>
+void Dictionary<K, V>::clear(Node *start){
+    if(!start)
+        return;
+    clear(start->left);
+    clear(start->right);
+    delete start;
 }
 
 template <typename K, typename V>
@@ -167,4 +184,15 @@ bool Dictionary<K, V>::contain(const key_type& key, Node *start) const noexcept{
         return contain(key, start->left);
     else
         return true;
+}
+
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::copy(Node *start){
+    Node *retv = nullptr;
+    if(start){
+        retv = new Node{start->key, start->info, start->bf, start->height, nullptr, nullptr};
+        retv->left = copy(start->left);
+        retv->right = copy(start->right);
+    }
+    return retv;
 }

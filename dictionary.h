@@ -9,7 +9,6 @@ class Dictionary
 {
     //private member types
     struct Node;
-
     Node *root;
 
 public:
@@ -32,7 +31,6 @@ public:
             insert(curr_pair.first, curr_pair.second);
     }
 
-
     //operator
     Dictionary& operator=(const Dictionary& rhs){
         clear();
@@ -42,6 +40,7 @@ public:
     Dictionary& operator=(Dictionary&& rhs){
         clear();
         root = std::move(rhs.root);
+        rhs.root = nullptr;
         return *this;
     }
 
@@ -55,9 +54,10 @@ public:
 
     //modifiers
     void insert(const key_type& new_key, const value_type& new_value);
-    void clear() noexcept{
-        clear(root);
-        root = nullptr;
+    void clear();
+    void remove(const key_type& key){
+        if(!contain(key))
+            throw DictionaryException("Dictionary remove : key does not exist");
     }
 
     //operations
@@ -77,20 +77,14 @@ public:
         return contain(key, root);
     }
 
-    ~Dictionary(){
+    ~Dictionary() noexcept{
         clear(root);
     }
 
 private:
     //modifiers
     Node* insert(const key_type& key, const value_type& val, Node *start);
-    void clear(Node *start){
-        if(!start)
-            return;
-        clear(start->left);
-        clear(start->right);
-        delete start;
-    }
+    void clear(Node *start);
 
     //updating nodes and tree functions
     void update(Node *node) noexcept;
@@ -114,15 +108,7 @@ private:
 
     //operations
     bool contain(const key_type& key, Node *start) const noexcept;
-    Node* copy(Node *start){
-        Node *retv = nullptr;
-        if(start){
-            retv = new Node{start->key, start->info, start->bf, start->height, nullptr, nullptr};
-            retv->left = copy(start->left);
-            retv->right = copy(start->right);
-        }
-        return retv;
-    }
+    Node* copy(Node *start);
 };
 
 #include "dictionary.tpp"

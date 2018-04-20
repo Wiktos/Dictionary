@@ -35,6 +35,13 @@ int main()
         test.insert(2, 2);
         if(test.height() != 1)
             std::cerr << "Log : insert method error height() != 1\n";
+
+        try{
+            test.insert(2, 2);
+            std::cerr << "Log : insert method exception expected\n";
+        }
+        catch(Dictionary<int, int>::DictionaryException& ex)
+        {}
     }
 
     {//test graph
