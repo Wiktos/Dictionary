@@ -130,6 +130,7 @@ typename Dictionary<K, V>::Node* Dictionary<K, V>::remove(const key_type& key, N
                 start->key = replace->key;
 
                 start->left = remove(replace->key, start->left);
+                delete replace;
             }
             else{
                 Node *replace = get_node(get_min(start->right), start->right);
@@ -137,6 +138,7 @@ typename Dictionary<K, V>::Node* Dictionary<K, V>::remove(const key_type& key, N
                 start->key = replace->key;
 
                 start->right = remove(replace->key, start->right);
+                delete replace;
             }
         }
     }
