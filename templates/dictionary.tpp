@@ -19,6 +19,21 @@ class Dictionary<K, V>::DictionaryException final : std::invalid_argument
 };
 
 template <typename K, typename V>
+Dictionary<K, V>& Dictionary<K, V>::operator=(const Dictionary<K, V>& rhs){
+    clear();
+    root = copy(rhs.root);
+    return *this;
+}
+
+template <typename K, typename V>
+Dictionary<K, V>& Dictionary<K, V>::operator=(Dictionary<K, V>&& rhs){
+    clear();
+    root = std::move(rhs.root);
+    rhs.root = nullptr;
+    return *this;
+}
+
+template <typename K, typename V>
 void Dictionary<K, V>::insert(const key_type& new_key, const value_type& new_value){
     if(contain(new_key, root))
         throw DictionaryException("Dictionary insert : key already exists");
@@ -248,7 +263,7 @@ void Dictionary<K, V>::postorder(std::ostream& os, Node *start) const{
 }
 
 template <typename K, typename V>
-bool Dictionary<K, V>::contain(const key_type& key, Node *start) const noexcept{
+bool Dictionary<K, V>::contain(const key_type& key, Node *start) const{
     if(!start)
         return false;
 

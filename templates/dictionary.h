@@ -26,23 +26,14 @@ public:
     Dictionary(Dictionary&& source) noexcept : root(std::move(root)){
         source.root = nullptr;
     }
-    Dictionary(std::initializer_list<std::pair<key_type, value_type>> ls) noexcept : root(nullptr){
+    Dictionary(std::initializer_list<std::pair<key_type, value_type>> ls) : root(nullptr){
         for(auto curr_pair : ls)
             insert(curr_pair.first, curr_pair.second);
     }
 
     //operator
-    Dictionary& operator=(const Dictionary& rhs){
-        clear();
-        root = copy(rhs.root);
-        return *this;
-    }
-    Dictionary& operator=(Dictionary&& rhs){
-        clear();
-        root = std::move(rhs.root);
-        rhs.root = nullptr;
-        return *this;
-    }
+    Dictionary& operator=(const Dictionary& rhs);
+    Dictionary& operator=(Dictionary&& rhs);
 
     //capacity
     bool is_empty() const noexcept{
@@ -94,7 +85,7 @@ public:
         return contain(key, root);
     }
 
-    ~Dictionary() noexcept{
+    ~Dictionary(){
         clear(root);
     }
 
@@ -130,7 +121,7 @@ private:
     void postorder(std::ostream& os, Node *start) const;
 
     //operations
-    bool contain(const key_type& key, Node *start) const noexcept;
+    bool contain(const key_type& key, Node *start) const;
     Node* copy(Node *start);
 };
 
