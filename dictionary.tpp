@@ -15,14 +15,15 @@ class Dictionary<K, V>::DictionaryException final : std::invalid_argument
 {
     public :
         using std::invalid_argument::invalid_argument;
+        using std::invalid_argument::what;
 };
 
 template <typename K, typename V>
 void Dictionary<K, V>::insert(const key_type& new_key, const value_type& new_value){
-    if(!contain(new_key, root))
-        root = insert(new_key, new_value, root);
-    else
+    if(contain(new_key, root))
         throw DictionaryException("Dictionary insert : key already exists");
+
+    root = insert(new_key, new_value, root);
 }
 
 template <typename K, typename V>
@@ -31,7 +32,44 @@ void Dictionary<K, V>::clear(){
     root = nullptr;
 }
 
+template <typename K, typename V>
+void Dictionary<K, V>::remove(const key_type& key){
+    if(!contain(key))
+        throw DictionaryException("Dictionary remove : key does not exist");
+
+    root = remove(key, root);
+}
+
 //***************** auxiliary functions *************************************
+
+template <typename K, typename V>
+typename Dictionary<K, V>::key_type& Dictionary<K, V>::get_max(Node *start) const{
+    if(!start->right)
+        return start->key;
+
+    return get_max(start->right);
+}
+
+template <typename K, typename V>
+typename Dictionary<K, V>::key_type& Dictionary<K, V>::get_min(Node *start) const{
+    if(!start->left)
+        return start->key;
+
+    return get_min(start->left);
+}
+
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::get_node(const key_type& key, Node *start) const{
+    if(!start)
+        throw DictionaryException("Node with a given key does not exist");
+
+    if(key > start->key)
+        return get_node(key, start->right);
+    else if(key < start->key)
+        return get_node(key, start->left);
+
+    return start;
+}
 
 template <typename K, typename V>
 typename Dictionary<K, V>::Node* Dictionary<K, V>::insert(const key_type& key, const value_type& val, Node *start){
@@ -54,6 +92,42 @@ void Dictionary<K, V>::clear(Node *start){
     clear(start->left);
     clear(start->right);
     delete start;
+}
+
+template <typename K, typename V>
+typename Dictionary<K, V>::Node* Dictionary<K, V>::remove(const key_type& key, Node* start){
+    if(!start)
+        return nullptr;
+
+    if(key < start->key)
+        start->left = remove(key, start->left);
+    else if(key > start->key)
+        start->right = remove(key, start->right);
+    else{
+        if(!start->left)
+            return start->right;
+        else if(!start->right)
+            return start->left;
+        else{
+            if(start->left->height > start->right->height){
+                Node *replace = get_node(get_max(start->left), start->left);
+                start->info = replace->info;
+                start->key = replace->key;
+
+                start->left = remove(replace->key, start->left);
+            }
+            else{
+                Node *replace = get_node(get_min(start->right), start->right);
+                start->info = replace->info;
+                start->key = replace->key;
+
+                start->right = remove(replace->key, start->right);
+            }
+        }
+    }
+
+    update(start);
+    return balance(start);
 }
 
 template <typename K, typename V>

@@ -52,13 +52,30 @@ public:
         return root ? root->height : 0;
     }
 
+    //element access
+    key_type& get_max(){
+        return get_max(root);
+    }
+    const key_type& get_max() const{
+        return get_max(root);
+    }
+    key_type& get_min(){
+        return get_min(root);
+    }
+    const key_type& get_min() const{
+        return get_min(root);
+    }
+    value_type& get_value(const key_type& key){
+        return get_node(key, root)->info;
+    }
+    const value_type& get_value(const key_type& key) const{
+        return get_node(key, root)->info;
+    }
+
     //modifiers
     void insert(const key_type& new_key, const value_type& new_value);
     void clear();
-    void remove(const key_type& key){
-        if(!contain(key))
-            throw DictionaryException("Dictionary remove : key does not exist");
-    }
+    void remove(const key_type& key);
 
     //operations
     void graph(std::ostream& os) const{
@@ -82,9 +99,15 @@ public:
     }
 
 private:
+    //element access
+    key_type& get_max(Node *start) const;
+    key_type& get_min(Node *start) const;
+    Node* get_node(const key_type& key, Node *start) const;
+
     //modifiers
     Node* insert(const key_type& key, const value_type& val, Node *start);
     void clear(Node *start);
+    Node* remove(const key_type& key, Node* start);
 
     //updating nodes and tree functions
     void update(Node *node) noexcept;

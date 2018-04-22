@@ -44,14 +44,6 @@ int main()
         {}
     }
 
-    {//test graph
-        Dictionary<int, int> test;
-        for(int i = 0; i < 10; i++)
-            test.insert(i, i);
-
-        test.graph(std::cout);
-    }
-
     {//test contain method
         Dictionary<int, int> test;
         test.insert(1, 1);
@@ -72,6 +64,43 @@ int main()
 
         if(test2.height() != 3)
             std::cerr << "Log : op= error height() != 3\n";
+    }
+
+    {//test get_min get_max get_value methods
+        Dictionary<int, int> test;
+        for(int i = 0; i < 10; i++)
+            test.insert(i, i);
+
+        if(test.get_max() != 9)
+            std::cerr << "Log : get_max error returned != 9\n";
+        if(test.get_min() != 0)
+            std::cerr << "Log : get_min error returned != 0\n";
+
+        if(test.get_value(4) != 4)
+            std::cerr << "Log : get_value error\n";
+    }
+
+    {//test remove method
+        Dictionary<int, int> test;
+        for(int i = 0; i < 10; i++)
+            test.insert(i, i);
+
+        try{
+            test.remove(3);
+        }
+        catch(Dictionary<int, int>::DictionaryException& ex){
+            std::cout << ex.what() << '\n';
+        }
+       // test.graph(std::cout);
+    }
+
+
+    {//test graph
+        Dictionary<int, int> test;
+        for(int i = 0; i < 10; i++)
+            test.insert(i, i);
+
+        test.graph(std::cout);
     }
 
     return 0;
