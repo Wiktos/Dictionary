@@ -91,7 +91,7 @@ int main()
         catch(Dictionary<int, int>::DictionaryException& ex){
             std::cout << ex.what() << '\n';
         }
-        //test.graph(std::cout);
+        test.graph(std::cout);
     }
 
 
@@ -100,7 +100,7 @@ int main()
         for(int i = 0; i < 10; i++)
             test.insert(i, i);
 
-        test.graph(std::cout);
+        //test.graph(std::cout);
     }
 
     return 0;

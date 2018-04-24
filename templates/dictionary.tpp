@@ -158,14 +158,14 @@ void Dictionary<K, V>::update(Node *node) noexcept{
 
 template <typename K, typename V>
 typename Dictionary<K, V>::Node* Dictionary<K, V>::balance(Node *node) noexcept{
-    if(node->bf == -2){
+    if(node->bf < -1){
         //left left
         if(node->left->bf <= 0)
             return llrotation(node);
         else    //left right
             return lrrotation(node);
     }
-    else if(node->bf == 2){
+    else if(node->bf > 1){
         //right right
         if(node->right->bf >= 0)
             return rrrotation(node);
